@@ -5,21 +5,22 @@ using UnityEngine.Experimental.Rendering.LWRP;
 
 public class PlayerMovement : MonoBehaviour
 {
-    [SerializeField] float moveSpeed = 5f;
-    [SerializeField] float lockedSpeed = 2f;
-    [SerializeField] float lightRotationSpeed = 5f;
-    [SerializeField] float lockedLightRotationSpeed = 2f;
 
+    [Header("General")]
     public Rigidbody2D rb;
     //public Animator animator;
     public SpriteRenderer spriteRenderer;
     public Transform flashLight;
 
+    [Header("Movement")]
+    [SerializeField] float moveSpeed = 5f;
     [SerializeField] float sprintSpeed = 10f;
 
-    Vector2 movement;
-    float movementSpeed;
-    bool isLocked = false;
+    
+
+    private Vector2 movement;
+    private float movementSpeed;
+
     
     
 
@@ -52,19 +53,12 @@ public class PlayerMovement : MonoBehaviour
         {
             movementSpeed = moveSpeed;
         }
-        if (Input.GetAxisRaw("Lock") > 0.1)
-        {
-            isLocked = true;
-            movementSpeed = lockedSpeed;
-        }
-        else
-        {
-            isLocked = false;
-        }
+
     }
 
     private void HandlePlayerAnimation()
     {
+        //To do, make sprites!
         //animator.SetFloat("Horizontal", movement.x);
         //animator.SetFloat("Vertical", movement.y);
         //animator.SetFloat("Speed", movement.sqrMagnitude);
@@ -79,33 +73,14 @@ public class PlayerMovement : MonoBehaviour
 
     private void HandleLightRotation()
     {
-        if (movement != Vector2.zero)
-        {
-            if (isLocked == true)
-            {
-
-                flashLight.transform.rotation = Quaternion.Slerp(flashLight.transform.rotation, Quaternion.LookRotation(Vector3.forward, movement * -1), Time.deltaTime * lockedLightRotationSpeed);
-            }
-            else
-            {
-                flashLight.transform.rotation = Quaternion.Slerp(flashLight.transform.rotation, Quaternion.LookRotation(Vector3.forward, movement), Time.deltaTime * lightRotationSpeed);
-            }
-
-        }
+        float addAngle = 270;
+        Vector3 dir = Input.mousePosition - Camera.main.WorldToScreenPoint(flashLight.transform.position);
+        float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg + addAngle;
+        flashLight.transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
     }
 
     private void HandlePlayerMovement()
     {
-        //To do, make left sprites
-        if (movement.x < -0.1)
-        {
-            spriteRenderer.flipX = true;
-        }
-        else
-        {
-            spriteRenderer.flipX = false;
-        }
-
 
         rb.MovePosition(rb.position + movement * movementSpeed * Time.deltaTime);
     }
