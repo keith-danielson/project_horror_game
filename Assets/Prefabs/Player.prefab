@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 8319883176067876177}
   - component: {fileID: 8319883176067876176}
   - component: {fileID: 8319883176067876183}
-  - component: {fileID: 1525449581}
   m_Layer: 0
   m_Name: Flashlight
   m_TagString: Untagged
@@ -86,22 +85,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d45ca82eb4a43a34887a5ed70ab826a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!58 &1525449581
-CircleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8319883176067876178}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: -0.02358181, y: 3.424635}
-  serializedVersion: 2
-  m_Radius: 2.84098
 --- !u!1 &8319883176437817077
 GameObject:
   m_ObjectHideFlags: 0
@@ -114,6 +97,7 @@ GameObject:
   - component: {fileID: 8319883176437817065}
   - component: {fileID: 8319883176437817066}
   - component: {fileID: 8319883176437817076}
+  - component: {fileID: 795697968}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -225,6 +209,22 @@ MonoBehaviour:
   flashLight: {fileID: 8319883176067876177}
   moveSpeed: 4
   sprintSpeed: 7
+--- !u!114 &795697968
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8319883176437817077}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b21183986007834581e1046e5e646a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  totalLives: 3
+  currentLives: 0
+  timeInvincible: 5
+  recentlyHit: 0
 --- !u!1 &8319883178041833618
 GameObject:
   m_ObjectHideFlags: 0
