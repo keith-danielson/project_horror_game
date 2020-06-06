@@ -26,7 +26,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1254212617}
   m_LocalRotation: {x: -0, y: -0.003906287, z: -0, w: 0.9999924}
-  m_LocalPosition: {x: -6.29, y: -3.87, z: -3.46}
+  m_LocalPosition: {x: -0.03999996, y: 0.029999733, z: -3.46}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 684857588495082523}
@@ -188,11 +188,11 @@ GameObject:
   m_Component:
   - component: {fileID: 684857588495082523}
   - component: {fileID: 684857588495082522}
-  - component: {fileID: 684857588495082521}
   - component: {fileID: 684857588495082520}
   - component: {fileID: 684857588495082524}
   - component: {fileID: 1925339621}
   - component: {fileID: 1925339616}
+  - component: {fileID: 771069861}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Untagged
@@ -244,42 +244,6 @@ MonoBehaviour:
   tagPenalties: 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
   graphMask:
     value: -1
---- !u!114 &684857588495082521
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 684857588495082535}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f6eb1402c17e84a9282a7f0f62eb584f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  version: 2
-  radius: 0.5
-  height: 2
-  repathRate: 0.5
-  canSearch: 1
-  canMove: 1
-  maxSpeed: 4
-  gravity: {x: 0, y: 0, z: 0}
-  groundMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  centerOffsetCompatibility: NaN
-  orientation: 1
-  enableRotation: 0
-  targetCompatibility: {fileID: 0}
-  maxAcceleration: -2.5
-  rotationSpeed: 360
-  slowdownDistance: 0.6
-  pickNextWaypointDist: 1.2
-  endReachedDistance: 0.2
-  alwaysDrawGizmos: 0
-  slowWhenNotFacingTarget: 1
-  whenCloseToDestination: 0
-  constrainInsideGraph: 0
 --- !u!114 &684857588495082520
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -287,7 +251,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 684857588495082535}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c9679e68a0f1144e79c664d9a11ca121, type: 3}
   m_Name: 
@@ -309,7 +273,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: -6.3, y: -3.8}
   serializedVersion: 2
-  m_Radius: 1.01
+  m_Radius: 1.15
 --- !u!114 &1925339621
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -339,6 +303,45 @@ MonoBehaviour:
   regenerationFactor: 10
   regenderationTime: 5
   damage: 0.5
+  baseSpeed: 5.17
+  slowedSpeed: 4.33
+  slowedMostSpeed: 1.69
+--- !u!114 &771069861
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 684857588495082535}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6eb1402c17e84a9282a7f0f62eb584f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 2
+  radius: 0.44
+  height: 1.66
+  repathRate: 0.5
+  canSearch: 1
+  canMove: 1
+  maxSpeed: 4
+  gravity: {x: 0, y: 0, z: 0}
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  centerOffsetCompatibility: NaN
+  orientation: 1
+  enableRotation: 0
+  targetCompatibility: {fileID: 0}
+  maxAcceleration: -2.5
+  rotationSpeed: 360
+  slowdownDistance: 0.6
+  pickNextWaypointDist: 1.2
+  endReachedDistance: 0.2
+  alwaysDrawGizmos: 0
+  slowWhenNotFacingTarget: 1
+  whenCloseToDestination: 0
+  constrainInsideGraph: 0
 --- !u!1 &684857589684458666
 GameObject:
   m_ObjectHideFlags: 0
@@ -365,7 +368,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 684857589684458666}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -6.32, y: -3.7, z: 0}
+  m_LocalPosition: {x: -0.07, y: 0.2, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 684857588183639323}
@@ -447,4 +450,4 @@ MonoBehaviour:
   - {x: -0.5, y: 1, z: 0}
   m_ShapePathHash: 0
   m_Mesh: {fileID: 0}
-  m_InstanceId: 16214
+  m_InstanceId: -1222

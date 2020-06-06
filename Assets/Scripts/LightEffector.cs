@@ -32,7 +32,7 @@ public class LightEffector : MonoBehaviour
         //Calculate the brightness shined on the sprite from texture
         CalculateBrightness();
 
-        Debug.Log(brightness);
+        //Debug.Log(brightness);
 
     }
 
