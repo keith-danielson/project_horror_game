@@ -17,6 +17,7 @@ public class CombatHandler : MonoBehaviour
     [SerializeField] float baseSpeed = 4f;
     [SerializeField] float slowedSpeed = 2f;
     [SerializeField] float slowedMostSpeed = 1f;
+    [SerializeField] float chaseViewAngle = 100f;
     
 
 
@@ -26,6 +27,7 @@ public class CombatHandler : MonoBehaviour
     [SerializeField] float pursueRange = 50f;
     [SerializeField] int damagePerAttack = 1;
     [SerializeField] float attackRate = 5f;
+    [SerializeField] bool canTakeDamage = true;
 
 
 
@@ -85,11 +87,14 @@ public class CombatHandler : MonoBehaviour
         HandleLifeStateBehavior();
         RechargeAttack();
         ChangeTarget();
+        
     }
 
     private void ChangeTarget()
     {
         destinationSetter.target = targetPosition;
+
+        
     }
 
     private void RechargeAttack()
@@ -112,9 +117,9 @@ public class CombatHandler : MonoBehaviour
         {
         
             case CombatEnum.ATTACK:
-               
+                
                 mainPlayerHealthHandler.takeDamage(damagePerAttack);
-                rechargedAttack = false;
+                
                 break;
             case CombatEnum.FLEE:
                 break;
@@ -122,6 +127,7 @@ public class CombatHandler : MonoBehaviour
                 targetPosition = null;
                 break;
             case CombatEnum.PURSUE:
+                fov.viewAngle = chaseViewAngle;
                 targetPosition = mainPlayerPosition;
                 break;
             case CombatEnum.SNEAK:
@@ -141,9 +147,10 @@ public class CombatHandler : MonoBehaviour
         //Currently only attacks, pursues, and sneaks
         float distanceFromPlayer = Vector3.Distance(currentPosition.position, mainPlayerPosition.position);
         canSeePlayer = fov.canSeeTarget;
-        if (distanceFromPlayer <= attackRange && rechargedAttack)
+        if (distanceFromPlayer <= attackRange && rechargedAttack && canSeePlayer)
         {
             combatState = CombatEnum.ATTACK;
+            rechargedAttack = false;
         }
         else if (distanceFromPlayer <= pursueRange && canSeePlayer)
         {
@@ -153,7 +160,7 @@ public class CombatHandler : MonoBehaviour
         {
             combatState = CombatEnum.SNEAK;
         }
-        Debug.Log(combatState + "Distance from player: " + distanceFromPlayer);
+        //Debug.Log(combatState + " Distance from player: " + distanceFromPlayer);
     }
 
     private void HandleSpeed()
@@ -223,16 +230,21 @@ public class CombatHandler : MonoBehaviour
     private void TakeDamage()
     {
         //Do damage to enemy based on brightness
-        if (brightnessOnSprite > 0.2)
+        if (canTakeDamage)
         {
-            damageTakenPerFrame = damage * lightDamageFactor * Time.deltaTime;
-            currentHealth -= damageTakenPerFrame;
+            if (brightnessOnSprite > 0.2)
+            {
+                damageTakenPerFrame = damage * lightDamageFactor * Time.deltaTime;
+                currentHealth -= damageTakenPerFrame;
+            }
+            else
+            {
+                damageTakenPerFrame = 0;
+                currentHealth = Mathf.Clamp(currentHealth + regenerationFactor * Time.deltaTime, 0, health);
+            }
+
         }
-        else
-        {
-            damageTakenPerFrame = 0;
-            currentHealth = Mathf.Clamp(currentHealth + regenerationFactor * Time.deltaTime, 0, health);
-        }
+        
     }
 
    

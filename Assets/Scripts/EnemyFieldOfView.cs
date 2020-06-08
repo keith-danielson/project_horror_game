@@ -7,7 +7,7 @@ public class EnemyFieldOfView : MonoBehaviour
 {
 
     public float viewRadius;
-    [Range(-180, 180)]
+    [Range(0, 180)]
     public float viewAngle;
 
     public LayerMask obstacleMask;
@@ -21,7 +21,6 @@ public class EnemyFieldOfView : MonoBehaviour
     void Update()
 
     {
-
         
        FindVisibleTargets();
     }
@@ -33,7 +32,6 @@ public class EnemyFieldOfView : MonoBehaviour
         {
             float dstToTarget = Vector3.Distance(transform.position, seekedObject.position);
 
-
             if (!Physics2D.Raycast(transform.position, dirToTarget, dstToTarget, obstacleMask))
             {
                 canSeeTarget = true;
@@ -42,7 +40,6 @@ public class EnemyFieldOfView : MonoBehaviour
             {
                 canSeeTarget = false;
             }
-
         }
     }
 

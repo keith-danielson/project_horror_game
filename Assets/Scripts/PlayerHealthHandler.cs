@@ -91,6 +91,6 @@ public class PlayerHealthHandler : MonoBehaviour
     {
         
         currentLives -= damage;
-        Debug.Log("Current health: " + currentLives);
+        Debug.Log("You took a hit! Current health: " + currentLives);
     }
 }
