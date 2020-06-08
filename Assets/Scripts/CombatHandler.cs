@@ -17,6 +17,7 @@ public class CombatHandler : MonoBehaviour
     [SerializeField] float baseSpeed = 4f;
     [SerializeField] float slowedSpeed = 2f;
     [SerializeField] float slowedMostSpeed = 1f;
+    
 
 
     [Header("Combat Settings")]
@@ -27,30 +28,44 @@ public class CombatHandler : MonoBehaviour
     [SerializeField] float attackRate = 5f;
 
 
+
+
+
     public enum CombatEnum { PURSUE, FLEE, ATTACK, FREEZE, SNEAK };
 
     private float brightnessOnSprite;
     private float currentHealth;
     private float lightDamageFactor;
     private float damageTakenPerFrame;
-    private LightEffector lightEffector;
-    private AIPath enemyPathSettings;
-    private LifeEnum lifeState = LifeEnum.HEALTHY;
-    private PlayerHealthHandler mainPlayerHealthHandler = null;
-    private CombatEnum combatState = CombatEnum.SNEAK;
     private bool rechargedAttack = true;
     private float currentRechargeAttackTime;
 
+    private LightEffector lightEffector;
+    private PlayerHealthHandler mainPlayerHealthHandler = null;
+    private Transform mainPlayerPosition = null;
     
+    
+    private AIPath path;
+    private Transform targetPosition;
+    private AIDestinationSetter destinationSetter;
+    private Transform currentPosition;
+
+
+    private LifeEnum lifeState = LifeEnum.HEALTHY;
+    private CombatEnum combatState = CombatEnum.SNEAK;
     
 
     void Start()
     {
         currentHealth = health;
         lightEffector = GetComponent<LightEffector>();
-        enemyPathSettings = GetComponent<AIPath>();
+        path = GetComponent<AIPath>();
+        destinationSetter = GetComponent<AIDestinationSetter>();
         mainPlayerHealthHandler = GameObject.Find("Player").GetComponent<PlayerHealthHandler>();
+        mainPlayerPosition = GameObject.Find("Player").GetComponent<Transform>();
         currentRechargeAttackTime = attackRate;
+        currentPosition = GetComponent<Transform>();
+        
     }
 
     // Update is called once per frame
@@ -64,6 +79,12 @@ public class CombatHandler : MonoBehaviour
         SetLifeState();
         HandleLifeStateBehavior();
         RechargeAttack();
+        ChangeTarget();
+    }
+
+    private void ChangeTarget()
+    {
+        destinationSetter.target = targetPosition;
     }
 
     private void RechargeAttack()
@@ -93,10 +114,17 @@ public class CombatHandler : MonoBehaviour
             case CombatEnum.FLEE:
                 break;
             case CombatEnum.FREEZE:
+                targetPosition = null;
                 break;
             case CombatEnum.PURSUE:
+                targetPosition = mainPlayerPosition;
                 break;
             case CombatEnum.SNEAK:
+                //Sneak logic here
+                
+                
+
+
                 break;
             default:
                 break;
@@ -106,7 +134,7 @@ public class CombatHandler : MonoBehaviour
     private void SetCombatState()
     {
         //Currently only attacks, pursues, and sneaks
-        float distanceFromPlayer = enemyPathSettings.remainingDistance;
+        float distanceFromPlayer = Vector3.Distance(currentPosition.position, mainPlayerPosition.position);
         if (distanceFromPlayer <= attackRange && rechargedAttack)
         {
             combatState = CombatEnum.ATTACK;
@@ -127,16 +155,17 @@ public class CombatHandler : MonoBehaviour
         //Handle movement speed when in light
         if (brightnessOnSprite > 0.6)
         {
-            enemyPathSettings.maxSpeed = slowedMostSpeed;
+            path.maxSpeed = slowedMostSpeed;
         }
         else if (brightnessOnSprite > 0.2)
         {
-            enemyPathSettings.maxSpeed = slowedSpeed;
+            path.maxSpeed = slowedSpeed;
         }
         else
         {
-            enemyPathSettings.maxSpeed = baseSpeed;
+            path.maxSpeed = baseSpeed;
         }
+        
     }
 
     private void GetCurrentBrightness()
