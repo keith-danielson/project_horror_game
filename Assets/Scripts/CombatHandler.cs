@@ -49,6 +49,8 @@ public class CombatHandler : MonoBehaviour
     private Transform targetPosition;
     private AIDestinationSetter destinationSetter;
     private Transform currentPosition;
+    private EnemyFieldOfView fov;
+    private bool canSeePlayer = false;
 
 
     private LifeEnum lifeState = LifeEnum.HEALTHY;
@@ -65,6 +67,9 @@ public class CombatHandler : MonoBehaviour
         mainPlayerPosition = GameObject.Find("Player").GetComponent<Transform>();
         currentRechargeAttackTime = attackRate;
         currentPosition = GetComponent<Transform>();
+        fov = GetComponent<EnemyFieldOfView>();
+        
+
         
     }
 
@@ -135,19 +140,20 @@ public class CombatHandler : MonoBehaviour
     {
         //Currently only attacks, pursues, and sneaks
         float distanceFromPlayer = Vector3.Distance(currentPosition.position, mainPlayerPosition.position);
+        canSeePlayer = fov.canSeeTarget;
         if (distanceFromPlayer <= attackRange && rechargedAttack)
         {
             combatState = CombatEnum.ATTACK;
         }
-        else if (distanceFromPlayer <= pursueRange)
+        else if (distanceFromPlayer <= pursueRange && canSeePlayer)
         {
             combatState = CombatEnum.PURSUE;
         }
-        else if (distanceFromPlayer <= sneakRange)
+        else if (distanceFromPlayer <= sneakRange && canSeePlayer)
         {
             combatState = CombatEnum.SNEAK;
         }
-        //Debug.Log(combatState + "Distance from player: " + distanceFromPlayer);
+        Debug.Log(combatState + "Distance from player: " + distanceFromPlayer);
     }
 
     private void HandleSpeed()
