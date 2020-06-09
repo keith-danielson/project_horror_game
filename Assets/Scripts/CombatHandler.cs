@@ -1,4 +1,4 @@
-﻿using System;
+﻿
 using System.Collections;
 using System.Collections.Generic;
 using Pathfinding;
@@ -12,13 +12,18 @@ public class CombatHandler : MonoBehaviour
     [SerializeField] float health = 50f;
     [SerializeField] float regenerationFactor = 10f;
     [SerializeField] float damage = 0.5f;
+    public LayerMask obstacleMask;
 
     [Header("Movement Settings")]
     [SerializeField] float baseSpeed = 4f;
     [SerializeField] float slowedSpeed = 2f;
     [SerializeField] float slowedMostSpeed = 1f;
     [SerializeField] float chaseViewAngle = 100f;
-    
+    [SerializeField] float sneakViewAngle = 180f;
+    [SerializeField] float teleportDistance = 20f;
+    [SerializeField] float timeBetweenTeleports = 10f;
+
+
 
 
     [Header("Combat Settings")]
@@ -53,6 +58,10 @@ public class CombatHandler : MonoBehaviour
     private Transform currentPosition;
     private EnemyFieldOfView fov;
     private bool canSeePlayer = false;
+    private float currentChaseTime;
+    private bool teleportCharged = true;
+    private float currentTeleportTime;
+    private Vector3 teleportPosition;
 
 
     private LifeEnum lifeState = LifeEnum.HEALTHY;
@@ -70,6 +79,8 @@ public class CombatHandler : MonoBehaviour
         currentRechargeAttackTime = attackRate;
         currentPosition = GetComponent<Transform>();
         fov = GetComponent<EnemyFieldOfView>();
+        currentTeleportTime = timeBetweenTeleports;
+
         
 
         
@@ -87,6 +98,7 @@ public class CombatHandler : MonoBehaviour
         HandleLifeStateBehavior();
         RechargeAttack();
         ChangeTarget();
+
         
     }
 
@@ -109,12 +121,25 @@ public class CombatHandler : MonoBehaviour
                 rechargedAttack = true;
             }
         }
+        if (!teleportCharged)
+        {
+            currentTeleportTime -= Time.deltaTime;
+            if (currentTeleportTime <= 0)
+            {
+                currentTeleportTime = timeBetweenTeleports;
+                teleportCharged = true;
+            }
+        }
     }
 
     private void HandleCombatStateBehavior()
     {
+
+
+
         switch (combatState)
         {
+
         
             case CombatEnum.ATTACK:
                 
@@ -129,9 +154,51 @@ public class CombatHandler : MonoBehaviour
             case CombatEnum.PURSUE:
                 fov.viewAngle = chaseViewAngle;
                 targetPosition = mainPlayerPosition;
+
+                
+
                 break;
             case CombatEnum.SNEAK:
                 //Sneak logic here
+                fov.viewAngle = sneakViewAngle;
+                if (teleportCharged)
+                {
+                    bool shouldTeleport = false;
+                    targetPosition = null;
+                    do
+                    {
+                        
+                        teleportPosition = mainPlayerPosition.position - (getRandomVector() * teleportDistance);
+
+                        float dstToTarget = Vector3.Distance(teleportPosition, mainPlayerPosition.position);
+                        Vector3 dirToTarget = (teleportPosition - mainPlayerPosition.position).normalized;
+                        
+
+
+
+                        if (!Physics2D.Raycast(mainPlayerPosition.position, dirToTarget, dstToTarget, obstacleMask))
+                        {
+                            print(Vector3.Distance(teleportPosition, mainPlayerPosition.position));
+                            
+                            shouldTeleport = true;
+                        }
+
+                        
+
+                    } while (!shouldTeleport);
+
+
+                    this.transform.position = teleportPosition;
+                    teleportCharged = false;
+                }
+                
+                //if (mainPlayerPosition.)
+                //this.transform.position = 
+
+
+
+
+
                 
                 
 
@@ -140,6 +207,26 @@ public class CombatHandler : MonoBehaviour
             default:
                 break;
         }
+    }
+
+    private Vector3 getRandomVector()
+    {
+        float x = (float)Random.Range(0, 100) / 100;
+        float y = (float)Random.Range(0, 100) / 100;
+        float z = 0;
+        /*
+        int makeNegative = Random.Range(0, 4);
+        if (makeNegative < 2)
+        {
+            x = x * -1;
+        }
+        if (makeNegative < 2)
+        {
+            y = y * -1;
+        }
+        Debug.Log("xyz: " + x + y + z);
+        */
+        return new Vector3(x, y, z);
     }
 
     private void SetCombatState()
